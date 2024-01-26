@@ -1,0 +1,165 @@
+<Window x:Class="AvaloniaFeaturesThatAmazeUs.Basics.MainWindow"
+        xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        xmlns:scg="using:System.Collections"
+        Title="AvaloniaFeaturesThatAmazeUs.Basics"
+        Width="800"
+        Height="600"
+        WindowStartupLocation="CenterScreen"
+        mc:Ignorable="d">
+    <TabControl Margin="0,0,0,10">
+        <TabItem Header="Controls">
+            <StackPanel Width="250"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Spacing="10">
+                <TextBox Watermark="Username" />
+                <MaskedTextBox Mask="(+86) ###-####-####" />
+                <AutoCompleteBox Watermark="Animal" ItemsSource="{ReflectionBinding $parent[Window].Animals}" />
+                <NumericUpDown Minimum="0" Maximum="10" Value="1.0" />
+                <ToggleSwitch />
+                <ToggleSplitButton Width="100">
+                    <ToggleSplitButton.Flyout>
+                        <MenuFlyout Placement="Bottom">
+                            <MenuItem Header="Item 1" />
+                            <MenuItem Header="Item 2" />
+                            <MenuItem Header="Item 3" />
+                        </MenuFlyout>
+                    </ToggleSplitButton.Flyout>
+                </ToggleSplitButton>
+            </StackPanel>
+        </TabItem>
+
+        <TabItem Header="Panels">
+            <DockPanel>
+
+                <DockPanel.Styles>
+                    <Style Selector="StackPanel Rectangle">
+                        <Setter Property="Fill" Value="LightGreen" />
+                        <Setter Property="Width" Value="75" />
+                        <Setter Property="Height" Value="75" />
+                    </Style>
+                    <Style Selector="Grid Rectangle">
+                        <Setter Property="Fill" Value="LightCoral" />
+                        <Setter Property="Margin" Value="5" />
+                    </Style>
+                </DockPanel.Styles>
+
+                <StackPanel Margin="5"
+                            Orientation="Horizontal"
+                            Spacing="10"
+                            DockPanel.Dock="Top">
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                </StackPanel>
+
+                <Grid RowDefinitions="*,2*,75" ColumnDefinitions="*,*" ShowGridLines="True">
+                    <Rectangle />
+                    <Rectangle Grid.Column="1" />
+                    <Rectangle Grid.Row="1" />
+                    <Rectangle Grid.Row="1" Grid.Column="1" />
+                    <Rectangle Grid.Row="2" Grid.ColumnSpan="2" />
+                </Grid>
+
+            </DockPanel>
+        </TabItem>
+
+        <TabItem Header="Bindings">
+            <UniformGrid Columns="2" Rows="2">
+
+                <UniformGrid.Styles>
+                    <Style Selector="UniformGrid > :is(Control)">
+                        <Setter Property="Margin" Value="10" />
+                    </Style>
+                </UniformGrid.Styles>
+
+                <Panel>
+                    <Border Width="{Binding $self.Bounds.Height}" Background="Gray" />
+                    <TextBlock HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               Foreground="White"
+                               FontSize="24"
+                               Text="Width=Height" />
+                </Panel>
+
+                <StackPanel VerticalAlignment="Center" Spacing="10">
+                    <TextBlock Margin="10,0" Text="{Binding #userInput.Text, Mode=OneWay, StringFormat='User Input: {0}'}" />
+                    <TextBox Name="userInput" Text="Hello, world!" />
+                </StackPanel>
+
+                <StackPanel Spacing="10">
+                    <StackPanel.Styles>
+                        <Style Selector="TextBox">
+                            <Setter Property="IsReadOnly" Value="True" />
+                        </Style>
+                    </StackPanel.Styles>
+                    <TextBox Text="{Binding $parent[TabItem].IsSelected, StringFormat='TabItem.IsSelected: {0}', Mode=OneWay}" />
+                    <TextBox Text="{Binding $parent[StackPanel].Bounds.Width, StringFormat='Panel.ActualWidth: {0:F3}', Mode=OneWay}" />
+                    <TextBox>
+                        <TextBox.Text>
+                            <MultiBinding StringFormat="Window.Size: {0:F0}x{1:F0}">
+                                <Binding Path="$parent[Window].Bounds.Width" Mode="OneWay" />
+                                <Binding Path="$parent[Window].Bounds.Height" Mode="OneWay" />
+                            </MultiBinding>
+                        </TextBox.Text>
+                    </TextBox>
+                    <CheckBox Content="IsVisible" IsChecked="True" />
+                    <Rectangle Height="30" IsVisible="{Binding $parent.((CheckBox)Children[3]).IsChecked}" Fill="PapayaWhip" />
+                </StackPanel>
+            </UniformGrid>
+        </TabItem>
+        
+        <TabItem Header="Styles &#38; Transitions">
+            <TabItem.Styles>
+                <Style Selector="Border.fancy">
+                    <Setter Property="Width" Value="100" />
+                    <Setter Property="Height" Value="100" />
+                    <Setter Property="Background" Value="LightCoral" />
+                    <Setter Property="Cursor" Value="Hand" />
+                </Style>
+                <Style Selector="Border.fancy:pointerover">
+                    <Setter Property="Width" Value="200" />
+                    <Setter Property="CornerRadius" Value="20" />
+                    <Setter Property="Background" Value="SkyBlue" />
+                    <Setter Property="RenderTransform" Value="rotate(180deg)" />
+                </Style>
+                <Style Selector="Border.fancy TextBlock">
+                    <Setter Property="Opacity" Value="0" />
+                    <Setter Property="FontSize" Value="1" />
+                    <Setter Property="FontWeight" Value="SemiBold" />
+                </Style>
+                <Style Selector="Border.fancy:pointerover TextBlock">
+                    <Setter Property="Opacity" Value="1" />
+                    <Setter Property="FontSize" Value="26" />
+                </Style>
+            </TabItem.Styles>
+            <Border Classes="fancy">
+                <Border.Transitions>
+                    <Transitions>
+                        <DoubleTransition Easing="CubicEaseInOut" Property="Width" Duration="0:0:0.25" />
+                        <CornerRadiusTransition Property="CornerRadius" Duration="0:0:0.2" />
+                        <BrushTransition Property="Background" Duration="0:0:0.25" />
+                        <TransformOperationsTransition Easing="CubicEaseInOut" Property="RenderTransform" Duration="0:0:0.5" />
+                    </Transitions>
+                </Border.Transitions>
+                <TextBlock HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Text="PointerOver!"
+                           RenderTransform="rotate(180deg)">
+                    <TextBlock.Transitions>
+                        <Transitions>
+                            <DoubleTransition Property="FontSize" Duration="0:0:0.25" />
+                            <DoubleTransition Property="Opacity" Duration="0:0:0.25" />
+                        </Transitions>
+                    </TextBlock.Transitions>
+                </TextBlock>
+            </Border>
+        </TabItem>
+    </TabControl>
+</Window>
